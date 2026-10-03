@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+python-dotenv
+httpx
+PyGithub
+pyyaml
+python-Levenshtein
+cryptography
+sqlalchemy
+alembic
+google-genai

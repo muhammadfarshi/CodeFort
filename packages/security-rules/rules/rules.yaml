@@ -1,0 +1,117 @@
+# Security Rules — Versioned Detection Rules
+# Rule naming convention (AGENTS.md §5):
+#   code.*           — Source code analysis
+#   dependency.*     — Package/manifest analysis
+#   workflow.*       — CI/CD workflow analysis
+#   artifact.*       — Release artifact analysis
+#   runtime.*        — Sandbox runtime analysis
+#   provenance.*     — Build provenance analysis
+
+rules:
+  # ── Code Engine ──────────────────────────────────────────────
+  - id: "code.subprocess_call@1"
+    severity: high
+    confidence: high
+    title: "Subprocess or system command execution detected"
+    description: "Code introduces subprocess, os.system, or os.popen calls which can execute arbitrary commands."
+    explanation_key: "code.subprocess_call"
+
+  - id: "code.eval_exec@1"
+    severity: critical
+    confidence: high
+    title: "Dynamic code execution via eval/exec"
+    description: "Code uses eval() or exec() to dynamically execute code, which can run arbitrary payloads."
+    explanation_key: "code.eval_exec"
+
+  - id: "code.obfuscated_content@1"
+    severity: high
+    confidence: medium
+    title: "Potentially obfuscated content detected"
+    description: "High-entropy or base64/hex encoded content detected that may conceal malicious payloads."
+    explanation_key: "code.obfuscated_content"
+
+  - id: "code.env_secret_access@1"
+    severity: high
+    confidence: high
+    title: "Environment variable or secret access"
+    description: "Code reads environment variables or files commonly used to store credentials."
+    explanation_key: "code.env_secret_access"
+
+  - id: "code.hardcoded_ip@1"
+    severity: medium
+    confidence: medium
+    title: "Hardcoded IP address detected"
+    description: "Code contains hardcoded IP addresses which may indicate C2 server communication."
+    explanation_key: "code.hardcoded_ip"
+
+  - id: "code.network_import@1"
+    severity: medium
+    confidence: medium
+    title: "Network library import in unexpected context"
+    description: "Code imports network libraries (socket, requests, urllib) in a context where networking is not expected."
+    explanation_key: "code.network_import"
+
+  # ── Dependency Engine ────────────────────────────────────────
+  - id: "dependency.typosquat@1"
+    severity: critical
+    confidence: high
+    title: "Potential typosquatting package detected"
+    description: "A newly added dependency has a name suspiciously similar to a popular package."
+    explanation_key: "dependency.typosquat"
+
+  - id: "dependency.known_vulnerability@1"
+    severity: high
+    confidence: high
+    title: "Known vulnerability in dependency"
+    description: "A dependency version has known CVEs in the OSV database."
+    explanation_key: "dependency.known_vulnerability"
+
+  - id: "dependency.install_hook@1"
+    severity: high
+    confidence: high
+    title: "Install-time script detected"
+    description: "Package defines preinstall/postinstall scripts that execute during installation."
+    explanation_key: "dependency.install_hook"
+
+  - id: "dependency.new_dependency@1"
+    severity: low
+    confidence: high
+    title: "New dependency added"
+    description: "A new package dependency was added. Review its purpose and trustworthiness."
+    explanation_key: "dependency.new_dependency"
+
+  # ── Workflow Engine ──────────────────────────────────────────
+  - id: "workflow.untrusted_checkout@1"
+    severity: critical
+    confidence: high
+    title: "Untrusted code checkout with elevated privileges"
+    description: "Workflow checks out PR head code using pull_request_target, granting it access to repository secrets."
+    explanation_key: "workflow.untrusted_checkout"
+
+  - id: "workflow.pull_request_target@1"
+    severity: high
+    confidence: high
+    title: "pull_request_target trigger detected"
+    description: "Workflow uses pull_request_target which runs with base repository permissions and secrets."
+    explanation_key: "workflow.pull_request_target"
+
+  - id: "workflow.unpinned_action@1"
+    severity: medium
+    confidence: high
+    title: "Unpinned GitHub Action reference"
+    description: "Action reference uses a mutable tag instead of a commit SHA, allowing supply-chain tampering."
+    explanation_key: "workflow.unpinned_action"
+
+  - id: "workflow.excessive_permissions@1"
+    severity: high
+    confidence: high
+    title: "Excessive workflow permissions"
+    description: "Workflow grants write-all or broad write permissions beyond what is needed."
+    explanation_key: "workflow.excessive_permissions"
+
+  - id: "workflow.expression_injection@1"
+    severity: critical
+    confidence: high
+    title: "Potential expression injection in workflow"
+    description: "Workflow uses ${{ github.event.* }} in a run: step, enabling command injection via PR metadata."
+    explanation_key: "workflow.expression_injection"

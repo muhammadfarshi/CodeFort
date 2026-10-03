@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.codefort-panel {
+    position: fixed;
+    top: 64px;
+    right: 24px;
+    width: 350px;
+    max-height: calc(100vh - 88px);
+    overflow-y: auto;
+    z-index: 999999;
+    border-radius: 6px;
+    border: 1px solid #374151; /* gray-700 */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
