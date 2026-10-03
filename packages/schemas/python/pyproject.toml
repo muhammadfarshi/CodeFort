@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "codefort-schemas"
+version = "0.1.0"
+description = "CodeFort shared schemas and data contracts"
+authors = [{ name = "CodeFort Security" }]
+dependencies = [
+    "pydantic>=2.0.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["codefort_schemas*"]

@@ -115,7 +115,7 @@ class WorkflowEngine:
     ) -> list[Finding]:
         """Detect usage of the pull_request_target trigger."""
         findings: list[Finding] = []
-        triggers = workflow.get("on", {})
+        triggers = workflow.get("on") if "on" in workflow else workflow.get(True, {})
 
         if isinstance(triggers, dict) and "pull_request_target" in triggers:
             findings.append(Finding(
@@ -172,7 +172,7 @@ class WorkflowEngine:
         This is the critical 'pwn request' pattern.
         """
         findings: list[Finding] = []
-        triggers = workflow.get("on", {})
+        triggers = workflow.get("on") if "on" in workflow else workflow.get(True, {})
 
         has_prt = (
             (isinstance(triggers, dict) and "pull_request_target" in triggers)
